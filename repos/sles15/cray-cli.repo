@@ -1,0 +1,5 @@
+[cray-cli]
+name=cray-cli
+baseurl=http://car.dev.cray.com/artifactory/shasta-premium/CLOUD/sle15_ncn/x86_64/dev/master/
+enabled=1
+gpgcheck=0

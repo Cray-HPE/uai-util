@@ -1,0 +1,6 @@
+[SLES15_Module_Legacy]
+enabled=1
+autorefresh=1
+baseurl=http://slemaster.us.cray.com/SuSE/SLE-Module-Legacy/15/x86_64/product/
+type=NONE
+keeppackages=1
