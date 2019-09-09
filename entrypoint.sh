@@ -114,6 +114,6 @@ echo "Running /sbin/ldconfig -v"
 
 # Start sshd as the user
 echo "Starting sshd"
-su $UAS_USER -c "/usr/sbin/sshd -f $UAS_SSH/sshd_config -D"
+su $UAS_USER -c "/usr/sbin/sshd -e -f $UAS_SSH/sshd_config -D"
 
 echo "Not reached - if you see this then sshd failed to start"
