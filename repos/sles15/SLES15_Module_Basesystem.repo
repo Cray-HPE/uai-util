@@ -1,0 +1,8 @@
+[SLES15_Module_Basesystem]
+enabled = 1
+autorefresh = 1
+baseurl = http://slemaster.us.cray.com/SuSE/SLE-Module-Basesystem/15/x86_64/product/
+type = NONE
+keeppackages = 1
+priority = 1
+

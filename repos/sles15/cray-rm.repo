@@ -1,0 +1,6 @@
+[cray-rm]
+name=cray-rm
+baseurl=http://car.dev.cray.com/artifactory/shasta-premium/RM/sle15_ncn/x86_64/dev/master/
+enabled=1
+gpgcheck=0
+
