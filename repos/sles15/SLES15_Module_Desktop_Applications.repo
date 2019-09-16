@@ -1,0 +1,6 @@
+[SLES15_Module_Desktop_Applications]
+enabled=1
+autorefresh=1
+baseurl=http://slemaster.us.cray.com/SuSE/SLE-Module-Desktop-Applications/15/x86_64/product/
+type=NONE
+keeppackages=1
