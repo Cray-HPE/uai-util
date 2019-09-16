@@ -1,5 +1,9 @@
 #!/bin/bash
 
+#
+# Copyright 2019, Cray Inc. All Rights Reserved.
+#
+
 if [ -z "$UAS_PASSWD" ]; then
     echo "UAS_PASSWD not defined"
     exit 1
