@@ -4,12 +4,12 @@
 uan-img creates a container that a user may ssh to. The Dockerfile
 will copy entrypoint.sh to /app/entrypoint.sh and install sshd.
 
-/app/entrypoint.sh requires UAN_PASSWD and UAN_PUBKEY be set to
+/app/entrypoint.sh requires UAS_PASSWD and UAS_PUBKEY be set to
 the users passwd entry and ssh public key.
 
 ## Requirements
 The base container must include sshd and ssh-keygen. Additionally,
-UAN_PASSWD and UAN_PUBKEY must be set as environment variables
+UAS_PASSWD and UAS_PUBKEY must be set as environment variables
 inside the container.
 
 ## Build uan-img
@@ -21,8 +21,8 @@ docker build -t uan-img:latest .
 ## Usage
 Create a file with the appropriate environment variables set.
 ```
-echo "UAN_PASSWD=$(getent passwd $USER)" | sed 's/ /\\ /g' >> envfile
-echo "UAN_PUBKEY=$(cat ~/.ssh/id_rsa.pub)" | sed 's/ /\\ /g' >> envfile
+echo "UAS_PASSWD=$(getent passwd $USER)" | sed 's/ /\\ /g' >> envfile
+echo "UAS_PUBKEY=$(cat ~/.ssh/id_rsa.pub)" | sed 's/ /\\ /g' >> envfile
 echo "API_GATEWAY_SERVICE_HOST=<sms_url>" >> envfile
 ```
 
