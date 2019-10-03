@@ -54,6 +54,7 @@ echo "Disabling password based login"
 passwd --delete $UAS_USER
 
 echo "Checking to see if ${UAS_HOME} exists"
+echo "If this hangs, please ensure that $UAS_HOME is properly mounted/working on the host of this pod"
 # Home directories may not be mounted, create one if needed
 if [ ! -d $UAS_HOME ]; then
     echo "No home directory exists, creating one"
@@ -115,6 +116,12 @@ fi
 # Run /sbin/ldconfig to setup modules
 echo "Running /sbin/ldconfig -v"
 /sbin/ldconfig -v
+
+# List mount points for easier diagnosis when things are missing
+# inside the pod
+echo "Listing mount points-----"
+mount | grep -v -e ^tmpfs -e ^cgroup -e ^proc -e ^overlay -e ^/dev/md126
+echo "-------------------------"
 
 # Start sshd as the user
 echo "Starting sshd"
