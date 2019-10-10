@@ -20,6 +20,11 @@ if [ -z "$UAS_NAME" ]; then
     UAS_PORT=30123
 else
     UAS_PORT=$(printenv $(echo ${UAS_NAME^^}_SERVICE_PORT | tr - _))
+    # If this UAI is started with a LoadBalancer service
+    # we don't actually want to use 22, instead use 30123
+    if [ "UAS_PORT" -eq 22 ]; then
+        UAS_PORT=30123
+    fi
     if [ "$UAS_PORT" -lt 1024 -o "$UAS_PORT" -gt 65535 ]; then
         echo "UAS_PORT:$UAS_PORT is not a valid user port"
         exit 1
