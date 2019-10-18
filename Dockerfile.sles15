@@ -7,6 +7,7 @@ FROM dtr.dev.cray.com/cray/cray-sles15:latest as base
 RUN rm -f /etc/security/limits.d/99-cray-network.conf
 
 # Install UAI-specific software
+RUN rm -f /etc/zypp/repos.d/*
 COPY repos/sles15 /etc/zypp/repos.d/
 COPY packages.sles15 /
 RUN zypper --non-interactive --gpg-auto-import-keys --no-gpg-checks install $(cat packages.sles15)
