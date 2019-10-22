@@ -1,5 +1,7 @@
 #!/bin/bash 
 
+unset LB_TEST_MODE
+
 export \
 UAS_PASSWD="hal:x:9000:9001:Hal Algo:/users/hal:/bin/bash" \
 UAS_GROUPS="sshd systemd-journal" \

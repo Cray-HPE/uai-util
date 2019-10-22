@@ -69,6 +69,13 @@ if [ "$($CMD)" != "UAS_PUBKEY not defined" ]; then
     exit 1
 fi
 
+echo "Checking for port 22 when using LoadBalancer..."
+. /app/test-env; HAL_IMAGE_SERVICE_PORT=22; export LB_TEST_MODE=true;
+if [ "$($CMD)" != "LOADBALANCER Test: 30123" ]; then
+    echo "FAIL: Did not catch UAS_PORT=30123 when using LoadBalancer"
+    exit 1
+fi
+
 echo "Checking for port range too low..."
 . /app/test-env; HAL_IMAGE_SERVICE_PORT=1023
 if [ "$($CMD)" != "UAS_PORT:1023 is not a valid user port" ]; then
