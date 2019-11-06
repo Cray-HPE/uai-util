@@ -1,6 +1,0 @@
-[SLES15_Network_Utilities]
-enabled=0
-autorefresh=1
-baseurl=http://download.opensuse.org/repositories/network:/utilities/SLE_15/
-type=NONE
-keeppackages=1

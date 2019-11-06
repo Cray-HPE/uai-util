@@ -95,9 +95,13 @@ echo "Generating ssh keys and sshd_config"
 UAS_SSH=/etc/uas/ssh
 mkdir -p $UAS_SSH
 /usr/bin/ssh-keygen -A
-cat /etc/ssh/sshd_config | egrep -v "^Port|^PrintLastLog|^AuthorizedKeysFile|^PasswordAuthentication|^X11UseLocalhost|^X11Forwarding|^ClientAliveInterval|^ClientAliveCountMax" > $UAS_SSH/sshd_config
+cat /etc/ssh/sshd_config | egrep -v "^Port|^PrintLastLog|^PrintMotd|^AuthorizedKeysFile|\
+                                     ^PasswordAuthentication|^X11UseLocalhost|\
+                                     ^X11Forwarding|^ClientAliveInterval|^ClientAliveCountMax" \
+                                     > $UAS_SSH/sshd_config
 echo "Port $UAS_PORT" >> $UAS_SSH/sshd_config
 echo "PrintLastLog no" >> $UAS_SSH/sshd_config
+echo "PrintMotd no" >> $UAS_SSH/sshd_config
 echo "AuthorizedKeysFile $UAS_SSH/authorized_keys" >> $UAS_SSH/sshd_config
 echo "PasswordAuthentication no" >> $UAS_SSH/sshd_config
 echo "X11UseLocalhost no" >> $UAS_SSH/sshd_config

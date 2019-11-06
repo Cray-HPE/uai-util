@@ -1,5 +1,0 @@
-[kubectl]
-name=kubectl
-baseurl=http://car.dev.cray.com/artifactory/shasta-standard/SHASTACOV/centos7/x86_64/predev/edge/
-enabled=1
-gpgcheck=0

@@ -1,6 +1,0 @@
-[SLES15_Product_SLES]
-enabled=1
-autorefresh=1
-baseurl=http://slemaster.us.cray.com/SuSE/SLE-Product-SLES/15/x86_64/product/
-type=NONE
-keeppackages=1
