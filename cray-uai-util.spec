@@ -1,5 +1,5 @@
 #
-# RPM spec file for switchboard
+# RPM spec file for uai-util
 # Copyright 2019 Cray Inc. All Rights Reserved.
 #
 %define packagename uai-util
