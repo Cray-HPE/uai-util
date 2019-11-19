@@ -1,97 +1,57 @@
 #!/bin/sh
 
-echo "Run uas-img packaging tests..."
+echo "Installing uai-util rpm..."
+zypper --no-gpg-checks --non-interactive addrepo \
+       http://car.dev.cray.com/artifactory/shasta-premium/CLOUD/sle15_ncn/x86_64/dev/master/ \
+       cloud
+zypper --no-gpg-checks install -y /workspace/src/stash.us.cray.com/uan/uai-util/RPMS/cray-uai-util-*.rpm
 
-# Make sure there are no limits inherited from the base image
-# which broke the ability to su $USER
-echo "Checking for limits in /etc/security/limits.conf..."
-if [ $(grep -v "#" /etc/security/limits.conf) ]; then
-    echo "Limit found in /etc/security/limits.conf"
-    exit 1
-fi
-
-# Check that packages.sles15 is sorted
-echo "Checking that packages.sles15 is alphabetized..."
-sort --check packages.sles15
-if [ $? -ne 0 ]; then
-    echo "FAIL: package.sles15 is not alphabetized"
-    exit 1
-fi
-
-# When we support more distros we will need to resurrect the distro
-# specific lists here
-RPM_LIST=$(cat ../packages.sles15)
-for rpm in $RPM_LIST; do
-    echo "Checking for package $rpm..."
-    rpm -q $rpm > /dev/null
-    if [ $? -ne 0 ]; then
-        echo "FAIL: Could not find $rpm"
-        exit 1
-    fi
-done
-
-# Check that commands are in PATH
-CMD_LIST="kubectl cray"
-for cmd in $CMD_LIST; do
-    echo "Checking for command $cmd..."
-    which $cmd > /dev/null
-    if [ $? -ne 0 ]; then
-        echo "FAIL: Could not find $cmd"
-        exit 1
-    fi
-done
-
-# Check that there is no password for root
-echo "Check that there is no password for root..."
-if [ "$(passwd -S root | awk '{print $2}')" != "NP" ]; then
-    echo "FAIL: status of root password is not 'NP'"
-    exit 1
-fi
+echo "Run uai-util tests..."
 
 # Stage a dummy pbs.conf to make sure it moves
 mkdir /etc/pbs
 echo "PBS_PUBLIC_HOST_NAME=ttl" > /etc/pbs/pbs.conf
 
-echo "Run uas-img entrypoint.sh tests..."
-CMD=/app/entrypoint.sh
+echo "Run uai-ssh.sh tests..."
+CMD=/usr/bin/uai-ssh.sh
 
 echo "Checking for unset variable UAS_PASSWD..."
-. /app/test-env; UAS_PASSWD=''
+. ./test/test-env; UAS_PASSWD=''
 if [ "$($CMD)" != "UAS_PASSWD not defined" ]; then
     echo "FAIL: Did not catch empty UAS_PASSWD"
     exit 1
 fi
 
 echo "Checking for unset variable UAS_PUBKEY..."
-. /app/test-env; UAS_PUBKEY=''
+. ./test/test-env; UAS_PUBKEY=''
 if [ "$($CMD)" != "UAS_PUBKEY not defined" ]; then
     echo "FAIL: Did not catch empty UAS_PUBKEY"
     exit 1
 fi
 
 echo "Checking for port 22 when using LoadBalancer..."
-. /app/test-env; HAL_IMAGE_SERVICE_PORT=22; export LB_TEST_MODE=true;
+. ./test/test-env; HAL_IMAGE_SERVICE_PORT=22; export LB_TEST_MODE=true;
 if [ "$($CMD)" != "LOADBALANCER Test: 30123" ]; then
     echo "FAIL: Did not catch UAS_PORT=30123 when using LoadBalancer"
     exit 1
 fi
 
 echo "Checking for port range too low..."
-. /app/test-env; HAL_IMAGE_SERVICE_PORT=1023
+. ./test/test-env; HAL_IMAGE_SERVICE_PORT=1023
 if [ "$($CMD)" != "UAS_PORT:1023 is not a valid user port" ]; then
     echo "FAIL: Did not catch UAS_PORT=1023"
     exit 1
 fi
 
 echo "Checking for port range too high..."
-. /app/test-env; HAL_IMAGE_SERVICE_PORT=65536
+. ./test/test-env; HAL_IMAGE_SERVICE_PORT=65536
 if [ "$($CMD)" != "UAS_PORT:65536 is not a valid user port" ]; then
     echo "FAIL: Did not catch UAS_PORT=65536"
     exit 1
 fi
 
 echo "Starting sshd as user hal..."
-. /app/test-env
+. ./test/test-env
 $CMD &
 
 echo "Checking that sshd started..."
@@ -115,7 +75,7 @@ fi
 
 echo "Checking that hal has ssh access..."
 UAS_SSH=/etc/uas/ssh
-cp /app/hal-id* $UAS_SSH
+cp ./test/hal-id* $UAS_SSH
 chown hal:9001 $UAS_SSH/hal-id*
 chmod 0600 $UAS_SSH/hal-id_rsa
 if [ "$(su hal -c 'ssh -q -oStrictHostKeyChecking=no -p $HAL_IMAGE_SERVICE_PORT -i /etc/uas/ssh/hal-id_rsa localhost whoami')" != "hal" ]; then
@@ -130,16 +90,6 @@ chmod 0600 $UAS_SSH/id_rsa*
 su hal -c "cat $UAS_SSH/id_rsa.pub >> $UAS_SSH/authorized_keys"
 if [ "$(su hal -c 'ssh -q -oStrictHostKeyChecking=no -p $HAL_IMAGE_SERVICE_PORT -i /etc/uas/ssh/id_rsa localhost whoami')" != "hal" ]; then
     echo "FAIL: ssh access for hal failed with second SSH key"
-    exit 1
-fi
-
-echo "Check that X11 is configured..."
-Xvfb :100 2> /dev/null &
-sleep 2
-export DISPLAY=:100
-su hal -c -p 'ssh -q -X -oStrictHostKeyChecking=no -p $HAL_IMAGE_SERVICE_PORT -i /etc/uas/ssh/hal-id_rsa localhost xset -q'
-if [ "$?" -ne "0" ]; then
-    echo "FAIL: X11 not configured"
     exit 1
 fi
 
@@ -168,6 +118,9 @@ if grep -q PBS_PUBLIC_HOST_NAME /etc/pbs.conf; then
     echo "FAIL: Found PBS_PUBLIC_HOST_NAME in /etc/pbs.conf"
     exit 1
 fi
+
+# End the uai-ssh.sh process so the test pipeline may continue
+pkill --uid hal sshd
 
 echo "All tests pass"
 exit 0
