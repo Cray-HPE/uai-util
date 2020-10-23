@@ -4,7 +4,7 @@ echo "Installing uai-util rpm..."
 zypper --no-gpg-checks --non-interactive addrepo \
        http://car.dev.cray.com/artifactory/shasta-premium/CLOUD/sle15_ncn/x86_64/dev/master/ \
        cloud
-zypper --no-gpg-checks install -y /workspace/src/stash.us.cray.com/uan/uai-util/RPMS/cray-uai-util-*.rpm
+zypper --no-gpg-checks install -y /workspace/src/stash.us.cray.com/uas/uai-util/RPMS/cray-uai-util-*.rpm
 
 echo "Run uai-util tests..."
 
