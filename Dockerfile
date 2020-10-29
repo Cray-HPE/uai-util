@@ -1,3 +1,5 @@
+# Copyright 2020 Hewlett Packard Enterprise Development LP
+
 FROM dtr.dev.cray.com/baseos/sles15sp1:latest
 
 COPY uai-ssh.sh /usr/bin/uai-ssh.sh
