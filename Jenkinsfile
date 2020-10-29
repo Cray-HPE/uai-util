@@ -1,9 +1,10 @@
-@Library("dst-shared") _
-rpmBuild (
-    channel: "casm-user",
-    slack_notify: ['FAILURE'],
-    product: "shasta-premium",
-    target_node: "cn,ncn",
-    fanout_params: ["sle15", "sle15sp1"],
-    unitTestScript: "./test/runUnitTests.sh"
-)
+@Library('dst-shared') _
+dockerBuildPipeline {
+    repository="cray"
+    imagePrefix="cray"
+    app="uai-sles15sp2"
+    name="cray-uai-sles15sp2"
+    description="Cray User Access Instance SLES15SP2"
+    slackNotification = ["#casm-cloud-alerts", "", false, false, true, false]
+    product = "shasta-premium"
+}
