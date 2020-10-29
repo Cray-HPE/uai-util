@@ -1,6 +1,6 @@
 # Copyright 2020 Hewlett Packard Enterprise Development LP
 
-FROM dtr.dev.cray.com/baseos/sles15sp1:latest
+FROM dtr.dev.cray.com/baseos/sles15sp2:latest
 
 COPY uai-ssh.sh /usr/bin/uai-ssh.sh
 RUN zypper update -y && \
