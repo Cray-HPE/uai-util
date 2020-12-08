@@ -2,8 +2,8 @@
 
 FROM dtr.dev.cray.com/baseos/sles15sp1:latest
 
-ARG SLURM_REPO=http://car.dev.cray.com/artifactory/wlm-slurm/RM/sle15_sp1_cn/x86_64/dev/master/
-ARG PBS_REPO=http://car.dev.cray.com/artifactory/wlm-pbs/RM/sle15_sp1_cn/x86_64/dev/master/
+ARG SLURM_REPO=http://car.dev.cray.com/artifactory/wlm-slurm/RM/sle15_sp1_cn/x86_64/release/shasta-1.4/
+ARG PBS_REPO=http://car.dev.cray.com/artifactory/wlm-pbs/RM/sle15_sp1_cn/x86_64/release/shasta-1.4/
 
 COPY uai-ssh.sh /usr/bin/uai-ssh.sh
 
