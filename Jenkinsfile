@@ -7,4 +7,5 @@ dockerBuildPipeline {
     description="Cray User Access Instance SLES15SP1"
     slackNotification = ["#casm-cloud-alerts", "", false, false, true, false]
     product = "csm"
+    githubPushRepo = "Cray-HPE/uai-util"
 }
