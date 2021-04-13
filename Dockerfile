@@ -20,7 +20,7 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-FROM dtr.dev.cray.com/baseos/sles15sp1:latest
+FROM arti.dev.cray.com/baseos-docker-master-local/sles15sp1:sles15sp1-build411
 
 ARG SLURM_REPO=http://car.dev.cray.com/artifactory/wlm-slurm/RM/sle15_sp1_cn/x86_64/release/shasta-1.4/
 ARG PBS_REPO=http://car.dev.cray.com/artifactory/wlm-pbs/RM/sle15_sp1_cn/x86_64/release/shasta-1.4/
