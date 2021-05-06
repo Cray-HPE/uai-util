@@ -1,6 +1,26 @@
 """ Nox definitations for tests, docs, and linting
 
-Copyright 2019, Cray Inc. All rights reserved.
+MIT License
+
+(C) Copyright [2021] Hewlett Packard Enterprise Development LP
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included
+in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
 """
 from __future__ import absolute_import
 import os
@@ -56,12 +76,8 @@ def tests(session):
     # Install all test dependencies, then install this package in-place.
     path = 'src'
     if session.python:
-        session.install('--index-url=http://dst.us.cray.com/dstpiprepo/simple',
-                        '--trusted-host=dst.us.cray.com',
-                        '-r', 'requirements-test.txt')
-        session.install('--index-url=http://dst.us.cray.com/dstpiprepo/simple',
-                        '--trusted-host=dst.us.cray.com',
-                        '-r', 'requirements.txt')
+        session.install('-r', 'requirements-test.txt')
+        session.install('-r', 'requirements.txt')
 
     # Run py.test against the tests.
     session.run(
@@ -85,9 +101,7 @@ def cover(session):
     test runs, and then erases coverage data.
     """
     if session.python:
-        session.install('--index-url=http://dst.us.cray.com/dstpiprepo/simple',
-                        '--trusted-host=dst.us.cray.com',
-                        'coverage', 'pytest-cov')
+        session.install('coverage', 'pytest-cov')
     session.run('coverage', 'report', '--show-missing',
                 '--fail-under={}'.format(COVERAGE_FAIL))
     session.run('coverage', 'erase')
