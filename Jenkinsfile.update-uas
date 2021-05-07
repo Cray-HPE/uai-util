@@ -1,0 +1,12 @@
+@Library("dst-shared@release/shasta-1.4") _
+dockerBuildPipeline {
+    repository="cray"
+    imagePrefix=""
+    app="update-uas"
+    name="update-uas"
+    dockerfile="Dockerfile.update-uas"
+    includeCharts=true
+    description="The update-uas job Helm chart and implementation"
+    slackNotification = ["#casm-cloud-alerts", "", false, false, true, false]
+    product = "csm"
+}

@@ -34,13 +34,14 @@ RUN pip3 install --no-cache-dir \
 # Run unit tests
 FROM base as testing
 COPY src/test_update_uas.py /app/src/test_update_uas.py
-COPY noxfile.py .coveragerc requirements-lint.txt requirements-style.txt requirements-test.txt /app
+COPY noxfile.py .coveragerc requirements-lint.txt requirements-style.txt requirements-test.txt /app/
 RUN pip3 install nox
 RUN pip3 install --no-cache-dir -r /app/requirements-lint.txt
 RUN pip3 install --no-cache-dir -r /app/requirements-style.txt
 RUN pip3 install --no-cache-dir -r /app/requirements-test.txt
 ARG FORCE_TESTS=null
 RUN cd /app && NOX_DOCKER_BUILD=yes nox
+ENTRYPOINT ["/bin/sh", "-ce", "cd /app && NOX_DOCKER_BUILD=yes nox"]
 
 # Create the actual job layer that will, ultimately, run update_uas.py.
 # the entrypoint here is a stub because the real entrypoint will be set
