@@ -2,10 +2,9 @@
 dockerBuildPipeline {
     repository="cray"
     imagePrefix="cray"
-    app="uai-sles15sp1"
-    name="cray-uai-sles15sp1"
-    description="Cray User Access Instance SLES15SP1"
-    includeCharts=false
+    app="uai-sles15sp2"
+    name="cray-uai-sles15sp2"
+    description="Cray User Access Instance SLES15SP2"
     slackNotification = ["#casm-cloud-alerts", "", false, false, true, false]
     product = "csm"
     githubPushRepo = "Cray-HPE/uai-util"
