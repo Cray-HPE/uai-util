@@ -64,4 +64,4 @@ images:
   list:
     - "cray/cray-uai-sles15sp1"
     - "cray/cray-uai-sles15sp2"
-  default: "cray/cray-uai-sles15sp1"
+  default: "cray/cray-uai-sles15sp2"
