@@ -23,8 +23,8 @@
 FROM arti.dev.cray.com/baseos-docker-master-local/sles15sp2:sles15sp2-build226
 
 
-ARG SLURM_REPO=http://car.dev.cray.com/artifactory/wlm-slurm/RM/sle15_sp2_cn/x86_64/release/wlm-slurm-1.0/
-ARG PBS_REPO=http://car.dev.cray.com/artifactory/wlm-pbs/RM/sle15_sp2_cn/x86_64/release/wlm-pbs-1.0/
+ARG SLURM_REPO=http://car.dev.cray.com/artifactory/wlm-slurm/RM/sle15_sp2_cn/x86_64/release/shasta-1.4/
+ARG PBS_REPO=http://car.dev.cray.com/artifactory/wlm-pbs/RM/sle15_sp2_cn/x86_64/release/shasta-1.4/
 
 COPY uai-ssh.sh /usr/bin/uai-ssh.sh
 
