@@ -1,10 +1,10 @@
-@Library("dst-shared@release/shasta-1.4") _
+@Library("dst-shared@master") _
 dockerBuildPipeline {
     repository="cray"
     imagePrefix="cray"
-    app="uai-sles15sp1"
-    name="cray-uai-sles15sp1"
-    description="Cray User Access Instance SLES15SP1"
+    app="uai-sles15sp2"
+    name="cray-uai-sles15sp2"
+    description="Cray User Access Instance SLES15SP2"
     includeCharts=false
     slackNotification = ["#casm-cloud-alerts", "", false, false, true, false]
     product = "csm"
