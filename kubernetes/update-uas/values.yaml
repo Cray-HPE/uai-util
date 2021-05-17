@@ -29,7 +29,7 @@ job:
 # Job execution container settings (see templates/job.yaml)
 container:
   image:
-    registry: registry.local
+    registry: dtr.dev.cray.com
     repository: update-uas
     pullPolicy: IfNotPresent
   livenessProbe:

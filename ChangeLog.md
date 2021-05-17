@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.10] - 2021-05-17
+- Fix Helm chart default image registry for update-uas job
+
 ## [1.0.9] - 2021-05-10
 - Build SLES15SP2 image and make it the default in the update-uas job
 
