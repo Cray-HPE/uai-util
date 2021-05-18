@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.11] - 2021-05-18
 - Fix Helm chart default image name for update-uas job
+- Remove no longer built Sles SP1 image registration
 
 ## [1.0.10] - 2021-05-17
 - Fix Helm chart default image registry for update-uas job
