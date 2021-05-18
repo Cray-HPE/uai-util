@@ -30,7 +30,7 @@ job:
 container:
   image:
     registry: dtr.dev.cray.com
-    repository: update-uas
+    repository: cray/update-uas
     pullPolicy: IfNotPresent
   livenessProbe:
     exec:
