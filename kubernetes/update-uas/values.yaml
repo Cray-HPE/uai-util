@@ -30,7 +30,7 @@ job:
 container:
   image:
     registry: dtr.dev.cray.com
-    repository: update-uas
+    repository: cray/update-uas
     pullPolicy: IfNotPresent
   livenessProbe:
     exec:
@@ -62,6 +62,5 @@ container:
 images:
   registry: registry.local
   list:
-    - "cray/cray-uai-sles15sp1"
     - "cray/cray-uai-sles15sp2"
   default: "cray/cray-uai-sles15sp2"
