@@ -1,0 +1,71 @@
+@Library('csm-shared-library') _
+
+pipeline {
+    agent {
+        label "metal-gcp-builder"
+    }
+
+    options {
+        buildDiscarder(logRotator(numToKeepStr: "10"))
+        timestamps()
+    }
+
+    environment {
+        NAME = "cray-uai-util"
+        UPDATE_UAS_NAME = "cray-update-uas"
+        CHART_NAME = "update-uas"
+        DESCRIPTION = "Cray User Access Instance"
+        IS_STABLE = getBuildIsStable()
+        VERSION = getDockerBuildVersion(isStable: env.IS_STABLE)
+        DOCKER_ARGS = getDockerBuildArgs(name: env.NAME, description: env.DESCRIPTION)
+        BUILD_METADATA = getRpmRevision(isStable: env.IS_STABLE)
+        CHART_VERSION = getChartVersion(version: env.VERSION)
+
+    }
+
+    stages {
+        stage("Build") {
+            parallel {
+                stage('Image') {
+                    steps {
+                        sh "make image"
+                    }
+                }
+                stage('Update UAS Image') {
+                    steps {
+                        sh "make image_update_uas"
+                    }
+                }
+
+                stage('Chart') {
+                    steps {
+                        sh "make chart"
+                    }
+                }
+
+                stage('Rpm') {
+                    steps {
+                        sh "make rpm"
+                    }
+                }
+            }
+        }
+        stage("Test") {
+            steps {
+                sh "make run_unit_test"
+            }
+        }
+
+        stage('Publish') {
+            steps {
+                script {
+                    publishCsmDockerImage(image: env.NAME, tag: env.VERSION, isStable: env.IS_STABLE)
+                    publishCsmDockerImage(image: env.UPDATE_UAS_NAME, tag: env.VERSION, isStable: env.IS_STABLE)
+                    publishCsmHelmCharts(component: env.CHART_NAME, chartsPath: "${WORKSPACE}/kubernetes/.packaged", isStable: env.IS_STABLE)
+                    publishCsmRpms(component: env.NAME, pattern: "dist/rpmbuild/RPMS/x86_64/*.rpm", arch: "x86_64", isStable: env.IS_STABLE)
+                    publishCsmRpms(component: env.NAME, pattern: "dist/rpmbuild/SRPMS/*.rpm", arch: "src", isStable: env.IS_STABLE)
+                }
+            }
+        }
+    }
+}
