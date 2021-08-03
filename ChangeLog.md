@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.12] - 2021-08-03
+- Update to alpine:3.14.0 and latest packages to address CVEs
+
 ## [1.0.11] - 2021-05-18
 - Fix Helm chart default image name for update-uas job
 - Remove no longer built Sles SP1 image registration
