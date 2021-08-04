@@ -22,4 +22,4 @@
 apiVersion: v1
 description: "End User UAI Image Installer Job"
 name: "update-uas"
-version: 1.0.11
+version: 1.0.12
