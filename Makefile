@@ -45,11 +45,11 @@ TEST_IMAGE ?= arti.dev.cray.com/dstbuildenv-docker-master-local/cray-sle15sp2_bu
 rpm: rpm_prepare rpm_package_source rpm_build_source rpm_build
 chart: chart_setup chart_package chart_test
 
-image:
-	docker build --pull ${DOCKER_ARGS} --tag '${NAME}:${VERSION}' .
+image_uai:
+	docker build --pull ${UAI_IMAGE_DOCKER_ARGS} --tag '${UAI_IMAGE_NAME}:${VERSION}' .
 
 image_update_uas:
-	docker build --pull ${DOCKER_ARGS} --tag '${UPDATE_UAS_NAME}:${VERSION}' --file Dockerfile.update-uas .
+	docker build --pull ${UPDATE_UAS_DOCKER_ARGS} --tag '${UPDATE_UAS_NAME}:${VERSION}' --file Dockerfile.update-uas .
 
 rpm_prepare:
 	rm -rf $(BUILD_DIR)

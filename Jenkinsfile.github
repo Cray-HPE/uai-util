@@ -12,23 +12,26 @@ pipeline {
 
     environment {
         NAME = "cray-uai-util"
-        UPDATE_UAS_NAME = "cray-update-uas"
+        DESCRIPTION = "Cray User Access Instance Supporting tools"
         CHART_NAME = "update-uas"
-        DESCRIPTION = "Cray User Access Instance"
+        UPDATE_UAS_NAME = "cray-update-uas"
+        UPDATE_UAS_DESCRIPTION = "Update UAS Job Image"
+        UPDATE_UAS_DOCKER_ARGS = getDockerBuildArgs(name: env.UPDATE_UAS_NAME, description: env.UPDATE_UAS_DESCRIPTION)
+        UAI_IMAGE_NAME = "cray-uai-sles15sp2"
+        UAI_IMAGE_DESCRIPTION = "SLES 15, SP2 Base User Access Intance (UAI) Image"
+        UAI_IMAGE_DOCKER_ARGS = getDockerBuildArgs(name: env.UAI_IMAGE_NAME, description: env.UAI_IMAGE_DESCRIPTION)
         IS_STABLE = getBuildIsStable()
         VERSION = getDockerBuildVersion(isStable: env.IS_STABLE)
-        DOCKER_ARGS = getDockerBuildArgs(name: env.NAME, description: env.DESCRIPTION)
         BUILD_METADATA = getRpmRevision(isStable: env.IS_STABLE)
         CHART_VERSION = getChartVersion(version: env.VERSION)
-
     }
 
     stages {
         stage("Build") {
             parallel {
-                stage('Image') {
+                stage('UAI Image') {
                     steps {
-                        sh "make image"
+                        sh "make image_uai"
                     }
                 }
                 stage('Update UAS Image') {
@@ -59,7 +62,7 @@ pipeline {
         stage('Publish') {
             steps {
                 script {
-                    publishCsmDockerImage(image: env.NAME, tag: env.VERSION, isStable: env.IS_STABLE)
+                    publishCsmDockerImage(image: env.UAI_IMAGE_NAME, tag: env.VERSION, isStable: env.IS_STABLE)
                     publishCsmDockerImage(image: env.UPDATE_UAS_NAME, tag: env.VERSION, isStable: env.IS_STABLE)
                     publishCsmHelmCharts(component: env.CHART_NAME, chartsPath: "${WORKSPACE}/kubernetes/.packaged", isStable: env.IS_STABLE)
                     publishCsmRpms(component: env.NAME, pattern: "dist/rpmbuild/RPMS/x86_64/*.rpm", arch: "x86_64", isStable: env.IS_STABLE)
