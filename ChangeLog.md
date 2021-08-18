@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.13] - 2021-08-16
+- Switch build to github sources and Algo60.net artifacts
+
 ## [1.0.12] - 2021-08-03
 - Update to alpine:3.14.0 and latest packages to address CVEs
 

@@ -1,9 +1,0 @@
-@Library("dst-shared@master") _
-rpmBuild (
-    channel: "casm-cloud-alerts",
-    slack_notify: ['FAILURE'],
-    product: "csm",
-    target_node: "ncn",
-    fanout_params: ["sle15sp1", "sle15sp2"],
-    unitTestScript: "./test/runUnitTests.sh"
-)
