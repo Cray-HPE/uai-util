@@ -14,7 +14,7 @@ pipeline {
         NAME = "cray-uai-util"
         DESCRIPTION = "Cray User Access Instance Supporting tools"
         CHART_NAME = "update-uas"
-        UPDATE_UAS_NAME = "cray-update-uas"
+        UPDATE_UAS_NAME = "update-uas"
         UPDATE_UAS_DESCRIPTION = "Update UAS Job Image"
         UPDATE_UAS_DOCKER_ARGS = getDockerBuildArgs(name: env.UPDATE_UAS_NAME, description: env.UPDATE_UAS_DESCRIPTION)
         UAI_IMAGE_NAME = "cray-uai-sles15sp2"
