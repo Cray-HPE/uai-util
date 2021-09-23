@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - 2021-09-23
+- Remove update-uas related content (this has moved to [uai-images](https://github.com/Cray-HPE/uai-images)
+- Remove basic UAI image related content (this has moved to [uia-images](https://github.com/Cray-HPE/uai-images)
+
 ## [1.0.13] - 2021-08-16
 - Switch build to github sources and Algo60.net artifacts
 
