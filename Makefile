@@ -22,7 +22,6 @@
 
 # DOCKER
 NAME ?= cray-uai-util
-UPDATE_UAS_NAME ?= cray-update-uas
 VERSION ?= $(shell cat .version)
 
 # RPM
@@ -33,23 +32,7 @@ SOURCE_NAME ?= ${NAME}-${SPEC_VERSION}
 BUILD_DIR ?= $(PWD)/dist/rpmbuild
 SOURCE_PATH := ${BUILD_DIR}/SOURCES/${SOURCE_NAME}.tar.bz2
 
-# Chart
-CHART_NAME ?= update-uas
-CHART_VERSION ?= $(shell cat .version)
-CHART_PATH ?= kubernetes
-HELM_UNITTEST_IMAGE ?= quintush/helm-unittest:3.3.0-0.2.5
-
-# Test
-TEST_IMAGE ?= arti.dev.cray.com/dstbuildenv-docker-master-local/cray-sle15sp2_build_environment:latest
-
 rpm: rpm_prepare rpm_package_source rpm_build_source rpm_build
-chart: chart_setup chart_package chart_test
-
-image_uai:
-	docker build --pull ${UAI_IMAGE_DOCKER_ARGS} --tag '${UAI_IMAGE_NAME}:${VERSION}' .
-
-image_update_uas:
-	docker build --pull ${UPDATE_UAS_DOCKER_ARGS} --tag '${UPDATE_UAS_NAME}:${VERSION}' --file Dockerfile.update-uas .
 
 rpm_prepare:
 	rm -rf $(BUILD_DIR)
@@ -65,17 +48,6 @@ rpm_build_source:
 rpm_build:
 		BUILD_METADATA=$(BUILD_METADATA) rpmbuild -ba $(SPEC_FILE) --nodeps --define "_topdir $(BUILD_DIR)"
 
-chart_setup:
-		mkdir -p ${CHART_PATH}/.packaged
-		printf "\nglobal:\n  appVersion: ${VERSION}" >> ${CHART_PATH}/${CHART_NAME}/values.yaml
-
-chart_package:
-		helm dep up ${CHART_PATH}/${CHART_NAME}
-		helm package ${CHART_PATH}/${CHART_NAME} -d ${CHART_PATH}/.packaged --app-version ${VERSION} --version ${CHART_VERSION}
-
-chart_test:
-		helm lint "${CHART_PATH}/${CHART_NAME}"
-		docker run --rm -v ${PWD}/${CHART_PATH}:/apps ${HELM_UNITTEST_IMAGE} -3 ${CHART_NAME}
-
 run_unit_test:
-	docker run --rm -v $(PWD):/workspace --workdir=/workspace ${TEST_IMAGE} ./test/runUnitTests.sh
+	# No unit test for the RPM content
+	true
