@@ -19,9 +19,10 @@
 # OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
-FROM alpine:3.13.2 as base
+FROM alpine:3.14.0 as base
 
 run apk update && apk add python3 py3-pip
+run apk upgrade
 
 RUN pip3 install --upgrade pip
 RUN mkdir -p /app/src
@@ -34,7 +35,7 @@ RUN pip3 install --no-cache-dir \
 # Run unit tests
 FROM base as testing
 COPY src/test_update_uas.py /app/src/test_update_uas.py
-COPY noxfile.py .coveragerc requirements-lint.txt requirements-style.txt requirements-test.txt /app/
+COPY pylintrc noxfile.py .coveragerc requirements-lint.txt requirements-style.txt requirements-test.txt /app/
 RUN pip3 install nox
 RUN pip3 install --no-cache-dir -r /app/requirements-lint.txt
 RUN pip3 install --no-cache-dir -r /app/requirements-style.txt

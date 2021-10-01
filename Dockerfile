@@ -20,16 +20,12 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-FROM arti.dev.cray.com/baseos-docker-master-local/sles15sp2:sles15sp2-build226
+FROM arti.dev.cray.com/baseos-docker-master-local/sles15sp2:latest
 
-
-ARG SLURM_REPO=http://car.dev.cray.com/artifactory/wlm-slurm/RM/sle15_sp2_cn/x86_64/release/shasta-1.4/
-ARG PBS_REPO=http://car.dev.cray.com/artifactory/wlm-pbs/RM/sle15_sp2_cn/x86_64/release/shasta-1.4/
 
 COPY uai-ssh.sh /usr/bin/uai-ssh.sh
 
-RUN zypper addrepo -G ${SLURM_REPO} slurm && \
-    zypper addrepo -G ${PBS_REPO} pbs && \
+RUN zypper ref && \
     zypper update -y && \
     zypper install -y curl \
                       glibc-locale-base \
@@ -38,9 +34,7 @@ RUN zypper addrepo -G ${SLURM_REPO} slurm && \
                       jq \
                       less \
                       openssh \
-                      pbspro-client \
                       rsync \
-                      slurm \
                       tar \
                       vim \
                       wget \
