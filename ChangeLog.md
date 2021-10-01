@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.14] - 2021-10-01
+- Rebuild in github for security fix
+- Remove slurm and pbs because of conflicts with pmix
+
 ## [1.0.13] - 2021-08-16
 - Switch build to github sources and Algo60.net artifacts
 
