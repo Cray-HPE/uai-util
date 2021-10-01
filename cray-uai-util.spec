@@ -29,7 +29,7 @@ Requires: craycli
 Name: cray-%{packagename}
 License: Cray Software License Agreement
 Summary: %{packagename}
-Version: %(cat .version)
+Version: %(cat .version | sed 's/-/_/g')
 Release: %(echo ${BUILD_METADATA})
 Source: %{name}-%{version}.tar.bz2
 Vendor: Cray Inc.
