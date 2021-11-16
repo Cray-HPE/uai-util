@@ -22,12 +22,6 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-echo "Installing uai-util rpm..."
-zypper --no-gpg-checks --non-interactive addrepo \
-       http://car.dev.cray.com/artifactory/shasta-premium/CLOUD/sle15_ncn/x86_64/dev/master/ \
-       cloud
-zypper --no-gpg-checks install -y ./dist/rpmbuild/RPMS/x86_64/cray-uai-util-*.rpm
-
 echo "Run uai-util tests..."
 
 # Stage a dummy pbs.conf to make sure it moves
@@ -72,7 +66,7 @@ if [ "$($CMD)" != "UAS_PORT:65536 is not a valid user port" ]; then
     exit 1
 fi
 
-echo "Starting sshd as user hal..."
+echo "Starting sshd..."
 . ./test/test-env
 $CMD &
 
@@ -86,12 +80,6 @@ for i in $(seq 1 10); do
 done
 if [ -z $sshd_pid ]; then
     echo "FAIL: sshd not running"
-    exit 1
-fi
-
-echo "Check that sshd is running as hal..."
-if [ "$(ps -o user= -p $sshd_pid)" != "hal" ]; then
-    echo "FAIL: Could not find sshd running as hal"
     exit 1
 fi
 
@@ -141,8 +129,46 @@ if grep -q PBS_PUBLIC_HOST_NAME /etc/pbs.conf; then
     exit 1
 fi
 
-# End the uai-ssh.sh process so the test pipeline may continue
-pkill --uid hal sshd
+# SSH to the process and sleep long enough to go beyond the soft timeout.
+# Once the SSH connection completes, check that sshd has gone away due to
+# no active connections
+echo "List of uai-ssh.sh and ssh processes..."
+ps ax | egrep "uai|ssh" | grep -v "grep"
+
+echo "Checking that the soft timeout works..."
+su hal -c 'ssh -q -oStrictHostKeyChecking=no -p $HAL_IMAGE_SERVICE_PORT -i /etc/uas/ssh/id_rsa localhost sleep 15'
+if [ "$?" -ne "0" ]; then
+    echo "FAIL: soft timeout sleep command could not complete"
+    exit 1
+fi
+
+# Wait to make sure uai-ssh.sh has had enough time to detect no actice connections
+sleep 5
+pidof sshd
+if [ "$?" -ne "1" ]; then
+    echo "FAIL: sshd is still running after a soft timeout..."
+    exit 1
+fi
+echo "List of uai-ssh.sh and ssh processes after soft timeout..."
+ps ax | egrep "uai|ssh" | grep -v "grep"
+
+# To check the hard timeout, unset UAI_SOFT_TIMEOUT and use UAI_HARD_TIMEOUT
+# Start a sleep process that goes beyond the hard timeout and make sure
+# the command is terminated
+echo "Starting sshd for hard timeout..."
+. ./test/test-env; 
+unset UAI_SOFT_TIMEOUT
+export UAI_HARD_TIMEOUT=10
+$CMD &
+
+sleep 15
+pidof sshd
+if [ "$?" -ne "1" ]; then
+    echo "FAIL: sshd is still running after a hard timeout..."
+    exit 1
+fi
+echo "List of uai-ssh.sh and ssh processes after hard timeout..."
+ps ax | egrep "uai|ssh" | grep -v "grep"
 
 echo "All tests pass"
 exit 0

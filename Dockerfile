@@ -1,5 +1,3 @@
-#!/bin/bash 
-
 # MIT License
 #
 # (C) Copyright [2020] Hewlett Packard Enterprise Development LP
@@ -22,13 +20,31 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-unset LB_TEST_MODE
+FROM arti.dev.cray.com/baseos-docker-master-local/sles15sp2:latest AS base
 
-export \
-UAS_PASSWD="hal:x:9000:9001:Hal Algo:/users/hal:/bin/bash" \
-UAS_GROUPS="sshd systemd-journal" \
-UAS_PUBKEY="ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDhetalxeOvuQVlM2MmCVIqro8Z/TX1X503hGL/doSyt5LTN5C9RIbCmk+ZBZmqE4pEGPzhYTj8s9pUhe5ZIMkN6fb6ju+3Svsq9cyHkLnNrX+I49seaaGLbQ5eAw6Kfm1YrcwZi2UeULj902NodXc34ITh/qN+9MiFJ6ljnqjP2H+vrhP3C9aCHkDD45AQEeQXCXbFkfwyKRVTEvIDapd+sEs2fp8myrvm2N3oRw+9SgPJa4/GvK7tBcRDNVJk/h+Yr2Dc/lCBz9lJWDeiI6AwilgmCbK//usqoa4770o0UpZdG6q74RX3BDu63AOfxB83GExX1FkQU/GUi5AjL3h3 hal@localhost" \
-UAS_NAME="hal-image" \
-HAL_IMAGE_SERVICE_PORT=30124 \
-SUPPRESS_DEBUG="yes" \
-UAI_SOFT_TIMEOUT=10
+RUN zypper addrepo --no-gpgcheck -f https://artifactory.algol60.net/artifactory/csm-rpms/hpe/stable/ algol60
+RUN zypper ref && \
+    zypper update -y && \
+    zypper install -y craycli \
+                      curl \
+                      glibc-locale-base \
+                      gzip \
+                      iputils \
+                      jq \
+                      less \
+                      openssh \
+                      rsync \
+                      tar \
+                      vim \
+                      wget \
+                      which
+COPY uai-ssh.sh /usr/bin/uai-ssh.sh
+
+ENV LC_ALL=C.UTF-8 LANG=C.UTF-8
+
+FROM base AS testing
+COPY test /test
+RUN /test/runUnitTests.sh
+
+FROM base AS app
+ENTRYPOINT /usr/bin/uai-ssh.sh

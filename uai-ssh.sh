@@ -145,17 +145,79 @@ if [ ! -z $MACVLAN_IP ]; then
 fi
 
 # Run /sbin/ldconfig to setup modules
-echo "Running /sbin/ldconfig -v"
-/sbin/ldconfig -v
+echo "Running /sbin/ldconfig"
+if [ "$SUPPRESS_DEBUG" -ne "yes" ]; then
+    /sbin/ldconfig -v 
+else
+    /sbin/ldconfig
+fi
 
 # List mount points for easier diagnosis when things are missing
 # inside the pod
-echo "Listing mount points-----"
-mount | grep -v -e ^tmpfs -e ^cgroup -e ^proc -e ^overlay -e ^/dev/md126
-echo "-------------------------"
+if [ "$SUPPRESS_DEBUG" -ne "yes" ]; then
+    echo "Listing mount points-----"
+    mount | grep -v -e ^tmpfs -e ^cgroup -e ^proc -e ^overlay -e ^/dev/md126
+    echo "-------------------------"
+fi
 
-# Start sshd as the user
+# Touch /var/run/utmp so who and wall commands work
+touch /var/run/utmp
+
+# Start sshd begin waiting for the timeouts
 echo "Starting sshd"
-su $UAS_USER -c "/usr/sbin/sshd -e -f $UAS_SSH/sshd_config -D"
+/usr/sbin/sshd -e -f $UAS_SSH/sshd_config
 
-echo "Not reached - if you see this then sshd failed to start"
+# Begin waiting for the following conditions:
+# UAI_SOFT_TIMEOUT - Exit if no active SSH connections exist
+# UAI_WARN_HARD_TIMEOUT - Warn with a wall message that the UAI exit regardless of SSH connections
+# UAI_HARD_TIMEOUT - Unconditionally exit
+
+# Check for condition in which no timeout occurs
+if [ -z "$UAI_SOFT_TIMEOUT" ] && [ -z "$UAI_HARD_TIMEOUT" ]; then
+    echo "No timeouts detected..."
+    sleep infinity
+fi
+
+# Short sleep to make sure the pid for sshd is available
+sleep 1
+SSHD_PID=$(pgrep -f /usr/sbin/sshd)
+
+# This "starts" the timer
+start=$SECONDS
+warn_issued=0
+
+while true; do
+    timer=$(( SECONDS - start ))
+
+    # Check for soft timeout condition
+    if [ "$UAI_SOFT_TIMEOUT" ] && \
+       [ "$timer" -ge $UAI_SOFT_TIMEOUT ]; then
+	num_connections=$(pgrep -laP $SSHD_PID | wc -l)
+        if [ "$num_connections" -eq "0" ]; then
+            echo "Soft timeout condition met"
+            kill -SIGTERM $SSHD_PID
+            exit 0
+        else
+            echo "Soft timeout condition met but: $num_connections ssh connection(s)"
+        fi
+    fi
+
+    # Check for hard timeout warning condition
+    if [ "$UAI_HARD_TIMEOUT_WARNING" ] && \
+       [ "$warn_issued" -eq 0 ] && \
+       [ "$timer" -ge $(( UAI_HARD_TIMEOUT - UAI_HARD_TIMEOUT_WARNING )) ]; then
+        echo "Warning condition met"
+        wall "This UAI is approaching the configured hard timeout and will exit in approximately $UAI_HARD_TIMEOUT_WARNING seconds"
+        warn_issued=1
+    fi
+    
+    # Check for hard timeout condition
+    if [ "$UAI_HARD_TIMEOUT" ] && \
+       [ "$timer" -ge $UAI_HARD_TIMEOUT ]; then
+        echo "Hard timeout condition met"
+        kill -SIGTERM $SSHD_PID
+        exit 0
+    fi
+
+    sleep 5
+done
