@@ -32,8 +32,10 @@ SOURCE_NAME ?= ${NAME}-${SPEC_VERSION}
 BUILD_DIR ?= $(PWD)/dist/rpmbuild
 SOURCE_PATH := ${BUILD_DIR}/SOURCES/${SOURCE_NAME}.tar.bz2
 
-rpm: rpm_prepare rpm_package_source rpm_build_source rpm_build
+rpm: run_unit_test rpm_prepare rpm_package_source rpm_build_source rpm_build
 
+run_unit_test:
+	docker build --progress plain --target testing .
 rpm_prepare:
 	rm -rf $(BUILD_DIR)
 	mkdir -p $(BUILD_DIR)/SPECS $(BUILD_DIR)/SOURCES
@@ -43,11 +45,7 @@ rpm_package_source:
 	tar --transform 'flags=r;s,^,/$(SOURCE_NAME)/,' --exclude .git --exclude dist -cvjf $(SOURCE_PATH) .
 
 rpm_build_source:
-		BUILD_METADATA=$(BUILD_METADATA) rpmbuild -ts $(SOURCE_PATH) --nodeps --define "_topdir $(BUILD_DIR)"
+	BUILD_METADATA=$(BUILD_METADATA) rpmbuild -ts $(SOURCE_PATH) --nodeps --define "_topdir $(BUILD_DIR)"
 
 rpm_build:
-		BUILD_METADATA=$(BUILD_METADATA) rpmbuild -ba $(SPEC_FILE) --nodeps --define "_topdir $(BUILD_DIR)"
-
-run_unit_test:
-	# No unit test for the RPM content
-	true
+	BUILD_METADATA=$(BUILD_METADATA) rpmbuild -ba $(SPEC_FILE) --nodeps --define "_topdir $(BUILD_DIR)"

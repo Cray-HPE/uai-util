@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.0] - 2021-12-7
+- CASMUSER-2809: Add support for auto delete timeouts
+
 ## [2.0.0] - 2021-09-23
 - Remove update-uas related content (this has moved to [uai-images](https://github.com/Cray-HPE/uai-images)
 - Remove basic UAI image related content (this has moved to [uia-images](https://github.com/Cray-HPE/uai-images)
