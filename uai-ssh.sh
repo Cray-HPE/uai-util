@@ -182,16 +182,18 @@ fi
 sleep 1
 SSHD_PID=$(pgrep -f /usr/sbin/sshd)
 
-# This "starts" the timer
-start=$SECONDS
+# This "starts" the timer(s)
+start_soft=$SECONDS
+start_hard=$SECONDS
 warn_issued=0
 
 while true; do
-    timer=$(( SECONDS - start ))
+    timer_soft=$(( SECONDS - start_soft ))
+    timer_hard=$(( SECONDS - start_hard ))
 
     # Check for soft timeout condition
     if [ "$UAI_SOFT_TIMEOUT" ] && \
-       [ "$timer" -ge $UAI_SOFT_TIMEOUT ]; then
+       [ "$timer_soft" -ge $UAI_SOFT_TIMEOUT ]; then
 	num_connections=$(pgrep -laP $SSHD_PID | wc -l)
         if [ "$num_connections" -eq "0" ]; then
             echo "Soft timeout condition met"
@@ -199,13 +201,15 @@ while true; do
             exit 0
         else
             echo "Soft timeout condition met but: $num_connections ssh connection(s)"
+            # Reset the soft timeout
+            start_soft=$SECONDS
         fi
     fi
 
     # Check for hard timeout warning condition
     if [ "$UAI_HARD_TIMEOUT_WARNING" ] && \
        [ "$warn_issued" -eq 0 ] && \
-       [ "$timer" -ge $(( UAI_HARD_TIMEOUT - UAI_HARD_TIMEOUT_WARNING )) ]; then
+       [ "$timer_hard" -ge $(( UAI_HARD_TIMEOUT - UAI_HARD_TIMEOUT_WARNING )) ]; then
         echo "Warning condition met"
         wall "This UAI is approaching the configured hard timeout and will exit in approximately $UAI_HARD_TIMEOUT_WARNING seconds"
         warn_issued=1
@@ -213,7 +217,7 @@ while true; do
     
     # Check for hard timeout condition
     if [ "$UAI_HARD_TIMEOUT" ] && \
-       [ "$timer" -ge $UAI_HARD_TIMEOUT ]; then
+       [ "$timer_hard" -ge $UAI_HARD_TIMEOUT ]; then
         echo "Hard timeout condition met"
         kill -SIGTERM $SSHD_PID
         exit 0
