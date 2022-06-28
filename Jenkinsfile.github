@@ -28,8 +28,12 @@ pipeline {
                 }
             }
             steps {
-                sh "make rpm"
-                sh "make run_unit_test"
+                withCredentials([
+                            usernamePassword(credentialsId: 'artifactory-algol60', usernameVariable: 'SLES_REPO_USERNAME', passwordVariable: 'SLES_REPO_PASSWORD')
+                    ]) {
+                    sh "make rpm"
+                    sh "make run_unit_test"
+                }
             }
         }
         stage("Build SP3") {
@@ -42,8 +46,12 @@ pipeline {
                 }
             }
             steps {
-                sh "make rpm"
-                sh "make run_unit_test"
+                withCredentials([
+                            usernamePassword(credentialsId: 'artifactory-algol60', usernameVariable: 'SLES_REPO_USERNAME', passwordVariable: 'SLES_REPO_PASSWORD')
+                    ]) {
+                    sh "make rpm"
+                    sh "make run_unit_test"
+                }
             }
         }
 
