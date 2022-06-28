@@ -20,11 +20,21 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-FROM arti.dev.cray.com/baseos-docker-master-local/sles15sp2:latest AS base
+FROM artifactory.algol60.net/csm-docker/stable/registry.suse.com/suse/sle15:15.3 as base
 
-RUN zypper addrepo --no-gpgcheck -f https://artifactory.algol60.net/artifactory/csm-rpms/hpe/stable/ algol60
+ARG SLES_REPO_USERNAME
+ARG SLES_REPO_PASSWORD
+ARG SLES_MIRROR="https://${SLES_REPO_USERNAME}:${SLES_REPO_PASSWORD}@artifactory.algol60.net/artifactory/sles-mirror"
+ARG SLES_VERSION=15-SP3
+ARG ARCH=x86_64
+
+RUN \
+  zypper --non-interactive rr --all && \
+  zypper --non-interactive ar ${SLES_MIRROR}/Products/SLE-Module-Basesystem/${SLES_VERSION}/${ARCH}/product?auth=basic sles15sp3-Module-Basesystem-product && \
+  zypper --non-interactive ar ${SLES_MIRROR}/Updates/SLE-Module-Basesystem/${SLES_VERSION}/${ARCH}/update?auth=basic sles15sp3-Module-Basesystem-update && \
+  zypper --non-interactive ar https://artifactory.algol60.net/artifactory/csm-rpms/hpe/stable/ algol60 && \
+  zypper update -y
 RUN zypper ref && \
-    zypper update -y && \
     zypper install -y craycli \
                       curl \
                       glibc-locale-base \

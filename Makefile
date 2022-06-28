@@ -32,10 +32,18 @@ SOURCE_NAME ?= ${NAME}-${SPEC_VERSION}
 BUILD_DIR ?= $(PWD)/dist/rpmbuild
 SOURCE_PATH := ${BUILD_DIR}/SOURCES/${SOURCE_NAME}.tar.bz2
 
-rpm: run_unit_test rpm_prepare rpm_package_source rpm_build_source rpm_build
+rpm: check_env run_unit_test rpm_prepare rpm_package_source rpm_build_source rpm_build
+
+check_env:
+ifndef SLES_REPO_USERNAME
+        $(error SLES_REPO_USERNAME is undefined)
+endif
+ifndef SLES_REPO_PASSWORD
+        $(error SLES_REPO_PASSWORD is undefined)
 
 run_unit_test:
 	docker build --progress plain --target testing .
+
 rpm_prepare:
 	rm -rf $(BUILD_DIR)
 	mkdir -p $(BUILD_DIR)/SPECS $(BUILD_DIR)/SOURCES
