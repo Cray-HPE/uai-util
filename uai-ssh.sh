@@ -130,13 +130,6 @@ echo "ClientAliveCountMax 720" >> $UAS_SSH/sshd_config
 echo "$UAS_PUBKEY" >> $UAS_SSH/authorized_keys
 chown $UAS_USER /etc/ssh/ssh_host_* $UAS_SSH/authorized_keys
 
-echo "Checking to see if Cray CLI needs to be initialized"
-# Initialize Cray CLI if needed
-if [ ! -f $UAS_HOME/.config/cray/configurations/default ]; then
-    echo "Creating default cray config"
-    su $UAS_USER -c "LANG=en_US.UTF-8 cray init --no-auth --hostname https://api-gw-service-nmn.local"
-fi
-
 # Setup macvlan host in /etc/hosts
 echo "Checking macvlan settings"
 MACVLAN_IP=`ip a show type macvlan | grep nmn1 | grep -oP '(?<=inet\s)\d+(\.\d+){3}'`
