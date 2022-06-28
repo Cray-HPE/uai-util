@@ -24,7 +24,7 @@ pipeline {
                     image "arti.dev.cray.com/dstbuildenv-docker-master-local/cray-sle15sp2_build_environment:latest"
                     reuseNode true
                     // Support docker in docker for clamav scan
-                    args "-v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker --group-add 999"
+                    args "-u root -v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker --group-add 999"
                 }
             }
             steps {
@@ -32,7 +32,6 @@ pipeline {
                             usernamePassword(credentialsId: 'artifactory-algol60', usernameVariable: 'SLES_REPO_USERNAME', passwordVariable: 'SLES_REPO_PASSWORD')
                     ]) {
                     sh "make rpm"
-                    sh "make run_unit_test"
                 }
             }
         }
@@ -42,7 +41,7 @@ pipeline {
                     image "arti.dev.cray.com/dstbuildenv-docker-master-local/cray-sle15sp3_build_environment:latest"
                     reuseNode true
                     // Support docker in docker for clamav scan
-                    args "-v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker --group-add 999"
+                    args "-u root -v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker --group-add 999"
                 }
             }
             steps {
@@ -50,7 +49,6 @@ pipeline {
                             usernamePassword(credentialsId: 'artifactory-algol60', usernameVariable: 'SLES_REPO_USERNAME', passwordVariable: 'SLES_REPO_PASSWORD')
                     ]) {
                     sh "make rpm"
-                    sh "make run_unit_test"
                 }
             }
         }

@@ -27,27 +27,27 @@ ARG SLES_REPO_PASSWORD
 ARG SLES_MIRROR="https://${SLES_REPO_USERNAME}:${SLES_REPO_PASSWORD}@artifactory.algol60.net/artifactory/sles-mirror"
 ARG SLES_VERSION=15-SP3
 ARG ARCH=x86_64
-
 RUN \
   zypper --non-interactive rr --all && \
   zypper --non-interactive ar ${SLES_MIRROR}/Products/SLE-Module-Basesystem/${SLES_VERSION}/${ARCH}/product?auth=basic sles15sp3-Module-Basesystem-product && \
   zypper --non-interactive ar ${SLES_MIRROR}/Updates/SLE-Module-Basesystem/${SLES_VERSION}/${ARCH}/update?auth=basic sles15sp3-Module-Basesystem-update && \
-  zypper --non-interactive ar https://artifactory.algol60.net/artifactory/csm-rpms/hpe/stable/ algol60 && \
+  zypper --non-interactive ar https://artifactory.algol60.net/artifactory/csm-rpms/hpe/stable/sle-15sp3 algol60 && \
+  zypper --non-interactive --gpg-auto-import-keys ref && \
   zypper update -y
-RUN zypper ref && \
-    zypper install -y craycli \
-                      curl \
-                      glibc-locale-base \
-                      gzip \
-                      iputils \
-                      jq \
-                      less \
-                      openssh \
-                      rsync \
-                      tar \
-                      vim \
-                      wget \
-                      which
+RUN  zypper install -y craycli \
+                       curl \
+                       glibc-locale-base \
+                       gzip \
+                       iputils \
+                       jq \
+                       less \
+                       openssh \
+                       rsync \
+                       sysvinit-tools \
+                       tar \
+                       vim \
+                       wget \
+                       which
 COPY uai-ssh.sh /usr/bin/uai-ssh.sh
 
 ENV LC_ALL=C.UTF-8 LANG=C.UTF-8

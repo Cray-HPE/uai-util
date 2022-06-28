@@ -40,9 +40,10 @@ ifndef SLES_REPO_USERNAME
 endif
 ifndef SLES_REPO_PASSWORD
         $(error SLES_REPO_PASSWORD is undefined)
+endif
 
 run_unit_test:
-	docker build --progress plain --target testing .
+	docker build --build-arg SLES_REPO_USERNAME --build-arg SLES_REPO_PASSWORD --progress plain --target testing .
 
 rpm_prepare:
 	rm -rf $(BUILD_DIR)
