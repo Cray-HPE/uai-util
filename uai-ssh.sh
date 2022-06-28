@@ -130,13 +130,6 @@ echo "ClientAliveCountMax 720" >> $UAS_SSH/sshd_config
 echo "$UAS_PUBKEY" >> $UAS_SSH/authorized_keys
 chown $UAS_USER /etc/ssh/ssh_host_* $UAS_SSH/authorized_keys
 
-# Setup macvlan host in /etc/hosts
-echo "Checking macvlan settings"
-MACVLAN_IP=`ip a show type macvlan | grep nmn1 | grep -oP '(?<=inet\s)\d+(\.\d+){3}'`
-if [ ! -z $MACVLAN_IP ]; then
-    echo "$MACVLAN_IP `hostname`-nmn" >> /etc/hosts
-fi
-
 # Run /sbin/ldconfig to setup modules
 echo "Running /sbin/ldconfig"
 if [ "$SUPPRESS_DEBUG" -ne "yes" ]; then
