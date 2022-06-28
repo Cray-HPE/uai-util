@@ -103,12 +103,6 @@ if [ "$(su hal -c 'ssh -q -oStrictHostKeyChecking=no -p $HAL_IMAGE_SERVICE_PORT 
     exit 1
 fi
 
-echo "Check that Cray CLI was initialized..."
-if [ ! -f ~hal/.config/cray/configurations/default ]; then
-    echo "FAIL: Cray CLI was not initialized"
-    exit 1
-fi
-
 echo "Check that the user has been added to groups"
 for group in $UAS_GROUPS; do
     if ! id -nG hal | grep -qw $group; then
