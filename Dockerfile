@@ -20,12 +20,12 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-FROM artifactory.algol60.net/csm-docker/stable/registry.suse.com/suse/sle15:15.3 as base
+FROM artifactory.algol60.net/csm-docker/stable/registry.suse.com/suse/sle15:15.4 as base
 
 ARG SLES_REPO_USERNAME
 ARG SLES_REPO_PASSWORD
 ARG SLES_MIRROR="https://${SLES_REPO_USERNAME}:${SLES_REPO_PASSWORD}@artifactory.algol60.net/artifactory/sles-mirror"
-ARG SLES_VERSION=15-SP3
+ARG SLES_VERSION=15-SP4
 ARG ARCH=x86_64
 RUN \
   zypper --non-interactive rr --all && \
@@ -34,20 +34,21 @@ RUN \
   zypper --non-interactive ar https://artifactory.algol60.net/artifactory/csm-rpms/hpe/stable/sle-15sp3 algol60 && \
   zypper --non-interactive --gpg-auto-import-keys ref && \
   zypper update -y
-RUN  zypper install -y craycli \
-                       curl \
-                       glibc-locale-base \
-                       gzip \
-                       iputils \
-                       jq \
-                       less \
-                       openssh \
-                       rsync \
-                       sysvinit-tools \
-                       tar \
-                       vim \
-                       wget \
-                       which
+RUN zypper install -y craycli \
+                      curl \
+                      gawk \
+                      glibc-locale-base \
+                      gzip \
+                      iputils \
+                      jq \
+                      less \
+                      openssh \
+                      rsync \
+                      sysvinit-tools \
+                      tar \
+                      vim \
+                      wget \
+                      which
 COPY uai-ssh.sh /usr/bin/uai-ssh.sh
 
 ENV LC_ALL=C.UTF-8 LANG=C.UTF-8

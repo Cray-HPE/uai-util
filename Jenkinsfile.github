@@ -18,10 +18,10 @@ pipeline {
     }
 
     stages {
-        stage("Build SP2") {
+        stage("Build SP3") {
             agent {
                 docker {
-                    image "arti.dev.cray.com/dstbuildenv-docker-master-local/cray-sle15sp2_build_environment:latest"
+                    image "arti.dev.cray.com/dstbuildenv-docker-master-local/cray-sle15sp3_build_environment:latest"
                     reuseNode true
                     // Support docker in docker for clamav scan
                     args "-u root -v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker --group-add 999"
@@ -35,10 +35,10 @@ pipeline {
                 }
             }
         }
-        stage("Build SP3") {
+        stage("Build SP4") {
             agent {
                 docker {
-                    image "arti.dev.cray.com/dstbuildenv-docker-master-local/cray-sle15sp3_build_environment:latest"
+                    image "arti.dev.cray.com/dstbuildenv-docker-master-local/cray-sle15sp4_build_environment:latest"
                     reuseNode true
                     // Support docker in docker for clamav scan
                     args "-u root -v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker --group-add 999"
@@ -57,10 +57,10 @@ pipeline {
             steps {
                 sh "sudo chown -R jenkins:jenkins $WORKSPACE/dist*/rpmbuild"
                 script {
-                    publishCsmRpms(os: 'sle-15sp2', component: env.NAME, pattern: "dist-sp2/rpmbuild/RPMS/x86_64/*.rpm", arch: "x86_64", isStable: env.IS_STABLE)
-                    publishCsmRpms(os: 'sle-15sp2', component: env.NAME, pattern: "dist-sp2/rpmbuild/SRPMS/*.rpm", arch: "src", isStable: env.IS_STABLE)
                     publishCsmRpms(os: 'sle-15sp3', component: env.NAME, pattern: "dist-sp3/rpmbuild/RPMS/x86_64/*.rpm", arch: "x86_64", isStable: env.IS_STABLE)
                     publishCsmRpms(os: 'sle-15sp3', component: env.NAME, pattern: "dist-sp3/rpmbuild/SRPMS/*.rpm", arch: "src", isStable: env.IS_STABLE)
+                    publishCsmRpms(os: 'sle-15sp4', component: env.NAME, pattern: "dist-sp4/rpmbuild/RPMS/x86_64/*.rpm", arch: "x86_64", isStable: env.IS_STABLE)
+                    publishCsmRpms(os: 'sle-15sp4', component: env.NAME, pattern: "dist-sp4/rpmbuild/SRPMS/*.rpm", arch: "src", isStable: env.IS_STABLE)
                 }
             }
         }

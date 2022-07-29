@@ -132,15 +132,15 @@ chown $UAS_USER /etc/ssh/ssh_host_* $UAS_SSH/authorized_keys
 
 # Run /sbin/ldconfig to setup modules
 echo "Running /sbin/ldconfig"
-if [ "$SUPPRESS_DEBUG" -ne "yes" ]; then
-    /sbin/ldconfig -v 
-else
+if [ "$SUPPRESS_DEBUG" == "yes" ]; then
     /sbin/ldconfig
+else
+    /sbin/ldconfig -v
 fi
 
 # List mount points for easier diagnosis when things are missing
 # inside the pod
-if [ "$SUPPRESS_DEBUG" -ne "yes" ]; then
+if ! [ "$SUPPRESS_DEBUG" == "yes" ]; then
     echo "Listing mount points-----"
     mount | grep -v -e ^tmpfs -e ^cgroup -e ^proc -e ^overlay -e ^/dev/md126
     echo "-------------------------"
