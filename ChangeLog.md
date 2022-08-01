@@ -6,13 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [2.2.0] - 2022-6-28
+## [2.2.0] - 2022-08-01
+- Generate SP4 rpms
+
+## [2.1.2] - 2022-06-28
 - CASMUSER-3034: Remove macvlan /etc/hosts entry
 
-## [2.1.2] - 2022-6-28
-- CASMUSER-3034: Remove macvlan /etc/hosts entry
-
-## [2.1.1] - 2022-6-28
+## [2.1.1] - 2022-06-28
 - CASMUSER-3033: Remove a default cray cli configuration
 
 ## [2.1.0] - 2021-12-7
