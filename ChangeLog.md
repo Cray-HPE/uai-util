@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.0] - 2023-08-08
+- Build RPM as `noarch` and `noos`
+
 ## [2.1.0] - 2021-12-7
 - CASMUSER-2809: Add support for auto delete timeouts
 
