@@ -34,8 +34,8 @@ RUN zypper ref && \
                       jq \
                       less \
                       openssh \
-                      pidof \
                       rsync \
+                      sysvinit-tools \
                       tar \
                       vim \
                       wget \
