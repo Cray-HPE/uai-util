@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.1] - 2023-08-09
+- Update build environment and unit tests to fix build breaks.
+
 ## [2.2.0] - 2023-08-08
 - Build RPM as `noarch` and `noos`
 
