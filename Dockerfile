@@ -25,7 +25,8 @@ FROM artifactory.algol60.net/csm-docker/stable/csm-docker-sle:latest AS base
 RUN zypper addrepo --no-gpgcheck -f https://arti.hpc.amslabs.hpecorp.net/artifactory/csm-rpms-remote/hpe/stable/sle-15sp4/ algol60
 RUN zypper ref && \
     zypper update -y && \
-    zypper install -y craycli \
+    zypper install -y bash \
+                      craycli \
                       curl \
                       glibc-locale-base \
                       gzip \
