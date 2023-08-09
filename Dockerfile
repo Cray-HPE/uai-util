@@ -1,6 +1,6 @@
 # MIT License
 #
-# (C) Copyright [2020] Hewlett Packard Enterprise Development LP
+# (C) Copyright [2020, 2023] Hewlett Packard Enterprise Development LP
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -20,9 +20,9 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-FROM arti.dev.cray.com/baseos-docker-master-local/sles15sp2:latest AS base
+FROM artifactory.algol60.net/csm-docker/stable/csm-docker-sle:latest AS base
 
-RUN zypper addrepo --no-gpgcheck -f https://artifactory.algol60.net/artifactory/csm-rpms/hpe/stable/ algol60
+RUN zypper addrepo --no-gpgcheck -f https://arti.hpc.amslabs.hpecorp.net/artifactory/csm-rpms-remote/hpe/stable/sle-15sp4/ algol60
 RUN zypper ref && \
     zypper update -y && \
     zypper install -y craycli \
