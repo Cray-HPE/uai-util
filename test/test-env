@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/usr/bin/bash 
 
 # MIT License
 #
@@ -25,7 +25,7 @@
 unset LB_TEST_MODE
 
 export \
-UAS_PASSWD="hal:x:9000:9001:Hal Algo:/users/hal:/bin/bash" \
+UAS_PASSWD="hal:x:9000:9001:Hal Algo:/users/hal:/usr/bin/bash" \
 UAS_GROUPS="sshd systemd-journal" \
 UAS_PUBKEY="ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDhetalxeOvuQVlM2MmCVIqro8Z/TX1X503hGL/doSyt5LTN5C9RIbCmk+ZBZmqE4pEGPzhYTj8s9pUhe5ZIMkN6fb6ju+3Svsq9cyHkLnNrX+I49seaaGLbQ5eAw6Kfm1YrcwZi2UeULj902NodXc34ITh/qN+9MiFJ6ljnqjP2H+vrhP3C9aCHkDD45AQEeQXCXbFkfwyKRVTEvIDapd+sEs2fp8myrvm2N3oRw+9SgPJa4/GvK7tBcRDNVJk/h+Yr2Dc/lCBz9lJWDeiI6AwilgmCbK//usqoa4770o0UpZdG6q74RX3BDu63AOfxB83GExX1FkQU/GUi5AjL3h3 hal@localhost" \
 UAS_NAME="hal-image" \
